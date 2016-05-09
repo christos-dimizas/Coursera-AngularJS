@@ -37,10 +37,10 @@ angular.module('confusionApp')
     }])
 
     // ONE DISH WITH 5 COMMENTS CONTROLLER
-    .controller('DishDetailController', ['$scope', '$routeParams', 'menuFactory', function($scope, $routeParams, menuFactory) {
+    .controller('DishDetailController', ['$scope', '$stateParams', 'menuFactory', function($scope, $stateParams, menuFactory) {
         $scope.inputText = "";
 
-        var dish = menuFactory.getDish(parseInt($routeParams.id,10));
+        var dish = menuFactory.getDish(parseInt($stateParams.id,10));
         //
         $scope.dish = dish;
 

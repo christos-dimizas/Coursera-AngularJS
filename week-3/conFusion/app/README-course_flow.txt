@@ -48,5 +48,20 @@ What we had to do:
                     IMPORTANT: THE ORDER OF THE DEPENDENCIES ADDED TO THE FUNCTION MUST BE THE SAME WITH THOSE OF THE CONTROLLER.
 
 
+
+/********* Angular UI-Router and SPA: Objectives and Outcomes
+
+UI-Router module supports:
+ a) multiple & nested views in the same time (ng-Route module supports only one).
+ b) rendering different parts of the site using the routing.
+
+It uses states to track different views instead of routes.
+
+Setup:
+
+1) change app.js according to ui-router specs.
+2) in any controller that requires parameters add $statePares as Dependency Injection (replace with $routeParams).
+3) Major refactor of templates (separate as better as possible).
+
 /********************************** /WEEK 3 *************************************/
 
