@@ -150,7 +150,6 @@ angular.module('confusionApp')
     /*
     *  ASSIGNMENT 3
     *
-    *  TODO: implement the IndexController
     * */
 
     // TASK 2 ------------------------------------//
