@@ -146,4 +146,32 @@ angular.module('confusionApp')
 
         }
     }])
+
+    /*
+    *  ASSIGNMENT 3
+    *
+    *  TODO: implement the IndexController
+    * */
+
+    // TASK 2 ------------------------------------//
+     .controller('IndexController', ['$scope', '$stateParams',
+        'menuFactory', 'corporateFactory',
+            function($scope, $stateParams, menuFactory, corporateFactory) {
+
+                //$scope.featuredDish = menuFactory.getDish(parseInt($stateParams.id,10));
+                //$scope.promotion = menuFactory.getPromotion(parseInt($stateParams.id,10));
+                //$scope.chef =  corporateFactory.getLeader(parseInt($stateParams.id,10));
+
+                $scope.featuredDish = menuFactory.getDish(0);
+                $scope.promotion = menuFactory.getPromotion(0);
+                $scope.chef =  corporateFactory.getLeader(0);
+
+
+    }])
+    // TASK 2 ------------------------------------//
+    .controller('AboutController', ['$scope', '$stateParams', 'corporateFactory', function($scope, $stateParams, corporateFactory) {
+        $scope.leaders = corporateFactory.getLeaders();
+
+    }])
+
 ;
