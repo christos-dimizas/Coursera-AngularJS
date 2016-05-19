@@ -187,29 +187,6 @@ angular.module('confusionApp')
             $scope.commentForm.$setPristine();
             $scope.mycomment = { author:"", rating:"5", comment:"", date:""};
         };
-
-        //$scope.submitComment = function () {
-        //    //Step 2: This is how you record the date
-        //    newComment.date = new Date().toISOString();
-
-        //    // Step 3: Push your comment into the dish's comment array
-        //    $scope.dish.comments.push(
-        //        {   rating:newComment.rating,
-        //            comment:newComment.text_comment,
-        //            author:newComment.name,
-        //            date:newComment.date
-        //        }
-        //    );
-
-        //    console.log(newComment);
-
-        //    //Step 4: reset your form to pristine
-        //    $scope.commentForm.$setPristine();
-
-        //    //Step 5: reset your JavaScript object that holds your comment
-        //    $scope.newComment = {name:"", rating:"5", text_comment:"", date:"" };
-        //
-        //}
     }])
 
     /*
@@ -251,15 +228,50 @@ angular.module('confusionApp')
                 //);
                 // /USING HTTP
 
-                $scope.promotion = menuFactory.getPromotion(0);
-                $scope.chef =  corporateFactory.getLeader(0);
+
+
+                // ASSIGNMENT 4 -  TASK 1 ------------------------------------//
+                $scope.showPromotion = false;
+                $scope.promotion = menuFactory.getPromotion().get({id:0})
+                    .$promise.then(
+                    function(response){
+                        $scope.promotion = response;
+                        $scope.showPromotion = true;
+                    },
+                    function(response) {
+                        $scope.message = "Error: "+response.status + " " + response.statusText;
+                    }
+                );
+
+                // ASSIGNMENT 4 -  TASK 2 ------------------------------------//
+                $scope.showChef = false;
+                $scope.chef =  corporateFactory.getLeader().get({id:0})
+                    .$promise.then(
+                    function(response){
+                        $scope.chef = response;
+                        $scope.showChef = true;
+                    },
+                    function(response) {
+                        $scope.message = "Error: "+response.status + " " + response.statusText;
+                    }
+                );
 
 
     }])
     // TASK 2 ------------------------------------//
     .controller('AboutController', ['$scope', '$stateParams', 'corporateFactory', function($scope, $stateParams, corporateFactory) {
-        $scope.leaders = corporateFactory.getLeaders();
 
+        // ASSIGNMENT 4 -  TASK 2 ------------------------------------//
+        $scope.showLeadership = false;
+
+        corporateFactory.getLeaders().query(
+            function(response) {
+                $scope.leaders = response;
+                $scope.showLeadership = true;
+            },
+            function(response) {
+                $scope.message = "Error: "+response.status + " " + response.statusText;
+        });
     }])
 
 ;
