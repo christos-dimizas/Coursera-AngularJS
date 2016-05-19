@@ -224,4 +224,112 @@ Setup:
 
     Save all the changes and then have a look at the web page.
 
+
+/********* RESTful Services and Angular $resource
+
+1) First, you will install the Angular ngResource module in your conFusion project by typing the following
+    at the command prompt when you are in the conFusion folder:
+
+    bower install angular-resource -S
+
+2) Remember to add angular-resource.min.js to the index.html file by including the following in the scripts
+    section of the page, right after including angular-ui-router:
+
+    <script src="../bower_components/angular-resource/angular-resource.min.js"></script>
+
+3) Inject the ngResource module into the Angular module by updating the angular.module() in app.js as follows:
+
+    angular.module('confusionApp', ['ui.router','ngResource'])
+
+4) Next, open services.js and update the code in menuFactory as follows to use Angular $resource:
+
+    .service('menuFactory', ['$resource', 'baseURL', function($resource,baseURL) {
+
+5) Then update the getDishes() function as follows:
+    this.getDishes = function(){
+        return $resource(baseURL+"dishes/:id",null,  {'update':{method:'PUT' }});
+    };
+
+6) Delete the getDish(index) function as we no longer need it. Save services.js.
+
+7) Open controllers.js and update the code in MenuController as follows:
+       $scope.showMenu = true;
+       $scope.message = "Loading ...";
+                   $scope.dishes = menuFactory.getDishes().query();
+
+8) Similarly update the DishDetailController as follows:
+       $scope.showDish = true;
+       $scope.message="Loading ...";
+                   $scope.dish = menuFactory.getDishes().get({id:parseInt($stateParams.id,10)});
+
+9) Finally, update the code in IndexController as follows:
+       $scope.showDish = true;
+       $scope.message="Loading ...";
+       $scope.dish = menuFactory.getDishes().get({id:0});
+10) Save the changes and have a look at the web application in the browser.
+
+/******* Handling Errors
+
+1) Open controllers.js and update the MenuController as follows:
+
+    $scope.showMenu = false;
+    $scope.message = "Loading ...";
+                menuFactory.getDishes().query(
+        function(response) {
+            $scope.dishes = response;
+            $scope.showMenu = true;
+        },
+        function(response) {
+            $scope.message = "Error: "+response.status + " " + response.statusText;
+        });
+2) Similarly update the DishDetailController as follows:
+
+    $scope.showDish = false;
+    $scope.message="Loading ...";
+                $scope.dish = menuFactory.getDishes().get({id:parseInt($stateParams.id,10)})
+    .$promise.then(
+                    function(response){
+                        $scope.dish = response;
+                        $scope.showDish = true;
+                    },
+                    function(response) {
+                        $scope.message = "Error: "+response.status + " " + response.statusText;
+                    }
+    );
+
+3) Finally update the IndexController as follows:
+
+   $scope.showDish = false;
+   $scope.message="Loading ...";
+   $scope.dish = menuFactory.getDishes().get({id:0})
+   .$promise.then(
+       function(response){
+           $scope.dish = response;
+           $scope.showDish = true;
+       },
+       function(response) {
+           $scope.message = "Error: "+response.status + " " + response.statusText;
+       }
+   );
+
+4) Now you will update the DishCommentController as follows in order to submit the user's comments
+    about a dish to the server. Inject the menuFactory to the DishCommentController:
+
+   .controller('DishCommentController', ['$scope', 'menuFactory', function($scope,menuFactory) {
+
+5) Also, update the submitComment() function as follows:
+
+   $scope.submitComment = function () {
+                       $scope.mycomment.date = new Date().toISOString();
+       console.log($scope.mycomment);
+                       $scope.dish.comments.push($scope.mycomment);
+
+       menuFactory.getDishes().update({id:$scope.dish.id},$scope.dish);
+                       $scope.commentForm.$setPristine();
+                       $scope.mycomment = {rating:5, comment:"", author:"", date:""};
+   }
+
+6) Save the changes and see the updated web application.
+
+
 /********************************** /WEEK 4 *********************************************************/

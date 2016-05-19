@@ -13,18 +13,32 @@ angular.module('confusionApp')
         $scope.showDetails = false;
         $scope.showMenu = false;
         $scope.message = "Loading...";
-        $scope.dishes = {};
 
-        menuFactory.getDishes()
-        .then(
-            function(response){
-                $scope.dishes = response.data;
+
+        // USING RESTFUL
+        menuFactory.getDishes().query(
+            function(response) {
+                $scope.dishes = response;
                 $scope.showMenu = true;
             },
-            function(response){
-               scope.message = "Error: " + response.status + " " + response.statusText;
-            }
-        );
+            function(response) {
+                $scope.message = "Error: "+response.status + " " + response.statusText;
+            });
+
+
+        // USING HTTP
+        //$scope.dishes = {};
+        //menuFactory.getDishes()
+        //.then(
+        //    function(response){
+        //        $scope.dishes = response.data;
+        //        $scope.showMenu = true;
+        //    },
+        //    function(response){
+        //       scope.message = "Error: " + response.status + " " + response.statusText;
+        //    }
+        //);
+        // /USING HTTP
 
         $scope.select = function(setTab){
             $scope.tab = setTab;
@@ -54,20 +68,36 @@ angular.module('confusionApp')
 
         $scope.inputText = "";
         $scope.showDish = false;
-        $scope.dish = {};
+
         $scope.message="Loading ...";
 
-        menuFactory.getDish(parseInt($stateParams.id,10))
-        // then method is the asynchronous call back function
-        .then(
-            function(responce){
-                $scope.dish = responce.data;
-                $scope.showDish=true;
+        // USING RESTFUL
+        $scope.dish = menuFactory.getDishes().get({id:parseInt($stateParams.id,10)})
+            .$promise.then(
+            function(response){
+                $scope.dish = response;
+                $scope.showDish = true;
             },
             function(response) {
                 $scope.message = "Error: "+response.status + " " + response.statusText;
             }
         );
+
+
+        // USING HTTP
+        //$scope.dish = {};
+        //menuFactory.getDish(parseInt($stateParams.id,10))
+        //// then method is the asynchronous call back function
+        //.then(
+        //    function(responce){
+        //        $scope.dish = responce.data;
+        //        $scope.showDish=true;
+        //    },
+        //    function(response) {
+        //        $scope.message = "Error: "+response.status + " " + response.statusText;
+        //    }
+        //);
+        // /USING HTTP
 
 
         // order by indicator
@@ -143,34 +173,43 @@ angular.module('confusionApp')
      * ASSIGNMENT 2 - CONTROLLERS
      *
      * */
-    .controller('DishCommentController', ['$scope', function($scope) {
+    .controller('DishCommentController', ['$scope', 'menuFactory', function($scope, menuFactory) {
 
         //Step 1: Create a JavaScript object to hold the comment from the form
-        $scope.newComment = {name:"", rating:"5", text_comment:"", date:"" };
-        var newComment = $scope.newComment;
+        $scope.newComment = {author:"", rating:"5", comment:"", date:"" };
 
         $scope.submitComment = function () {
+            $scope.newComment.date = new Date().toISOString();
+            console.log($scope.newComment);
+            $scope.dish.comments.push($scope.newComment);
 
-            //Step 2: This is how you record the date
-            newComment.date = new Date().toISOString();
-
-            // Step 3: Push your comment into the dish's comment array
-            $scope.dish.comments.push(
-                {   rating:newComment.rating,
-                    comment:newComment.text_comment,
-                    author:newComment.name,
-                    date:newComment.date
-                }
-            );
-
-            console.log(newComment);
-
-            //Step 4: reset your form to pristine
+            menuFactory.getDishes().update({id:$scope.dish.id},$scope.dish);
             $scope.commentForm.$setPristine();
-            //Step 5: reset your JavaScript object that holds your comment
-            $scope.newComment = {name:"", rating:"5", text_comment:"", date:"" };
+            $scope.mycomment = { author:"", rating:"5", comment:"", date:""};
+        };
 
-        }
+        //$scope.submitComment = function () {
+        //    //Step 2: This is how you record the date
+        //    newComment.date = new Date().toISOString();
+
+        //    // Step 3: Push your comment into the dish's comment array
+        //    $scope.dish.comments.push(
+        //        {   rating:newComment.rating,
+        //            comment:newComment.text_comment,
+        //            author:newComment.name,
+        //            date:newComment.date
+        //        }
+        //    );
+
+        //    console.log(newComment);
+
+        //    //Step 4: reset your form to pristine
+        //    $scope.commentForm.$setPristine();
+
+        //    //Step 5: reset your JavaScript object that holds your comment
+        //    $scope.newComment = {name:"", rating:"5", text_comment:"", date:"" };
+        //
+        //}
     }])
 
     /*
@@ -183,24 +222,35 @@ angular.module('confusionApp')
         'menuFactory', 'corporateFactory',
             function($scope, $stateParams, menuFactory, corporateFactory) {
 
-                //$scope.featuredDish = menuFactory.getDish(parseInt($stateParams.id,10));
-                //$scope.promotion = menuFactory.getPromotion(parseInt($stateParams.id,10));
-                //$scope.chef =  corporateFactory.getLeader(parseInt($stateParams.id,10));
-
-                $scope.featuredDish = {};
+                //$scope.featuredDish = {}; // use with http
                 $scope.showDish = false;
                 $scope.message="Loading ...";
 
-                menuFactory.getDish(0)
-                .then(
-                    function(responce){
-                        $scope.featuredDish = responce.data;
+                // USING RESTFUL
+                $scope.featuredDish = menuFactory.getDishes().get({id:0})
+                    .$promise.then(
+                    function(response){
+                        $scope.featuredDish = response;
                         $scope.showDish = true;
                     },
                     function(response) {
                         $scope.message = "Error: "+response.status + " " + response.statusText;
                     }
                 );
+
+                // USING HTTP
+                //menuFactory.getDish(0)
+                //.then(
+                //    function(responce){
+                //        $scope.featuredDish = responce.data;
+                //        $scope.showDish = true;
+                //    },
+                //    function(response) {
+                //        $scope.message = "Error: "+response.status + " " + response.statusText;
+                //    }
+                //);
+                // /USING HTTP
+
                 $scope.promotion = menuFactory.getPromotion(0);
                 $scope.chef =  corporateFactory.getLeader(0);
 
