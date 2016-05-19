@@ -152,6 +152,15 @@ angular.module('confusionApp')
 
             console.log($scope.feedback);
 
+            // ASSIGNMENT 4 -  TASK 3 ------------------------------------//
+
+            // find a way to pass it to the server
+            // auto increment the id
+
+
+
+
+
             if ($scope.feedback.agree && ($scope.feedback.contact == "")&& !$scope.feedback.contact) { // the rule after && might not needed
                 $scope.invalidChannelSelection = true;
                 console.log('incorrect');

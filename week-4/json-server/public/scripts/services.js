@@ -51,4 +51,17 @@ angular.module('confusionApp')
 
     }])
 
+    // ASSIGNMENT 4 -  TASK 3 ------------------------------------//
+    .factory('feedbackFactory',['$resource', 'baseURL', function($resource, baseURL) {
+
+        var feedback = {};
+
+        feedback.getFeedback = function(){
+            return $resource(baseURL+"feedback/:id", null, {'save':{method:'POST'}});
+        };
+
+        return feedback;
+
+    }])
+
 ;
