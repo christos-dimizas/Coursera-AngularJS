@@ -146,27 +146,24 @@ angular.module('confusionApp')
     }])
 
     // VALIDATOR CONTACT CONTROLLER
-    .controller('FeedbackController', ['$scope', function($scope) {
+    .controller('FeedbackController', ['$scope', 'feedbackFactory', function($scope, feedbackFactory) {
 
         $scope.sendFeedback = function() {
 
             console.log($scope.feedback);
-
-            // ASSIGNMENT 4 -  TASK 3 ------------------------------------//
-
-            // find a way to pass it to the server
-            // auto increment the id
-
-
-
-
-
             if ($scope.feedback.agree && ($scope.feedback.contact == "")&& !$scope.feedback.contact) { // the rule after && might not needed
                 $scope.invalidChannelSelection = true;
                 console.log('incorrect');
             }
             else {
                 $scope.invalidChannelSelection = false;
+
+                // ASSIGNMENT 4 -  TASK 3 - Pass feedback to Server ------------------------------------//
+                // Pass it to the server
+                feedbackFactory.getFeedback().save($scope.feedback);
+
+
+                // then reset the form
                 $scope.feedback = {contact:"", firstName:"", lastName:"", agree:false, email:"" };
                 $scope.feedback.contact="";
 
@@ -187,6 +184,7 @@ angular.module('confusionApp')
         //Step 1: Create a JavaScript object to hold the comment from the form
         $scope.newComment = {author:"", rating:"5", comment:"", date:"" };
 
+        // the below code was refactored during week 4 course
         $scope.submitComment = function () {
             $scope.newComment.date = new Date().toISOString();
             console.log($scope.newComment);
@@ -267,10 +265,10 @@ angular.module('confusionApp')
 
 
     }])
-    // TASK 2 ------------------------------------//
+    // ASSIGNMENT 3 - TASK 2 - Create the about controller ------------------------------------//
     .controller('AboutController', ['$scope', '$stateParams', 'corporateFactory', function($scope, $stateParams, corporateFactory) {
 
-        // ASSIGNMENT 4 -  TASK 2 ------------------------------------//
+        // ASSIGNMENT 4 -  TASK 2 - refactor controller to work with REST calls ------------------------------------//
         $scope.showLeadership = false;
 
         corporateFactory.getLeaders().query(
